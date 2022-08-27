@@ -116,10 +116,11 @@ module.exports = {
     }
   },
 
-  addToPost_Hash_Join: (req, res, next) => {
+  // adding to post_hash_join and book_hash_join
+  addToPHJ_BHJ: (req, res, next) => {
     try {
         // destructuring res.locals;
-        const { post_id, tags } = res.locals;
+        const { post_id, book_id, tags } = res.locals;
         console.log("current tags: ", tags);
         // query for getting hash_id for tag from hash_table
         const hash_tableQuery = `SELECT hash_id FROM hash_table WHERE hash = $1`
@@ -135,16 +136,24 @@ module.exports = {
             const post_hash_joinQuery = `INSERT INTO post_hash_join (post_id, hash_id) VALUES ($1, $2) RETURNING *`
             //params for adding to post_hash_join table query
             const post_hash_joinQueryParams = [ post_id, currHashId ];
-            // query for adding to post_hash_join table
+            // execution of query for adding to post_hash_join table
             const data2 = await db.query(post_hash_joinQuery, post_hash_joinQueryParams);
             console.log("data added to post_hash_join", data2.rows);
+             //query for adding to post_hash_join table
+             const book_hash_joinQuery = `INSERT INTO book_hash_join (book_id, hash_id) VALUES ($1, $2) RETURNING *`
+             //params for adding to post_hash_join table query
+             const book_hash_joinQueryParams = [ book_id, currHashId ];
+             // execution of query for adding to post_hash_join table
+             const data3 = await db.query(book_hash_joinQuery, book_hash_joinQueryParams);
+             console.log("=========================================================");
+             console.log("data added to book_hash_join", data3.rows);
 
         });
         next();
     } catch(err) {
         next({
-            log: "error in addToRating_Table middleware",
-            message: "error in addToRating_Table middleware"
+            log: "error in addToPHJ_BHJ middleware",
+            message: "error in addToPHJ_BHJ middleware"
         })
     }
   }
