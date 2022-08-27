@@ -60,7 +60,6 @@ module.exports = {
         console.log("addToPost_Table: ", data.rows);
         next();
     } catch(err) {
-        console.log("Tags Already Exist");
         next({
             log: "error in addToPost_Table middleware",
             message: "error in addToPost_Table middleware"
@@ -73,6 +72,7 @@ module.exports = {
         //destructure the request body
         const { tags } = req.body;
         const tagsArray = tags.split(",");
+        res.locals.tags = tagsArray;
         let insertIntoQuery = ""
         for (let i = 1; i <= tagsArray.length; i++) {
             if (i < tagsArray.length) {
@@ -83,16 +83,68 @@ module.exports = {
         }
         //query for adding to post_table
         const hash_tableQuery = `INSERT INTO hash_table (hash) VALUES ${insertIntoQuery} RETURNING *`
-        console.log("Tags Array: ", tagsArray);
-        console.log("QUERY hash_table: ", hash_tableQuery);
         // query execution 
         const data = await db.query(hash_tableQuery, tagsArray);
         console.log("data added to hash_table", data.rows);
         next();
     } catch(err) {
+        console.log("Tags Already Exist");
+        next()
+    }
+  },
+
+  addToRating_Table: async (req, res, next) => {
+    try {
+        // destructure res.locals;
+        const { book_id, post_id } = res.locals;
+        //destructure the request body
+        const {  plotline, unpredictability, pace, writingStyle, ending, overallEnjoyability } = req.body;
+        //query for adding to rating_table
+        const rating_tableQuery = `INSERT INTO rating_table ( post_id, book_id, plotline, unpredictability, pace, 
+            writing_style, ending, overall_enjoyability) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`
+        // params for rating_table query
+        const rating_tableQueryParams = [ post_id, book_id, plotline, unpredictability, pace, writingStyle, ending, overallEnjoyability];
+        // query execution 
+        const data = await db.query(rating_tableQuery, rating_tableQueryParams);
+        console.log("data added to rating_table", data.rows);
+        next();
+    } catch(err) {
         next({
-            log: "error in addToHash_Table middleware",
-            message: "error in addToHash_Table middleware"
+            log: "error in addToRating_Table middleware",
+            message: "error in addToRating_Table middleware"
+        })
+    }
+  },
+
+  addToPost_Hash_Join: (req, res, next) => {
+    try {
+        // destructuring res.locals;
+        const { post_id, tags } = res.locals;
+        console.log("current tags: ", tags);
+        // query for getting hash_id for tag from hash_table
+        const hash_tableQuery = `SELECT hash_id FROM hash_table WHERE hash = $1`
+        // loop through each tag to find corresponding hash_id
+        tags.forEach( async (tag) => {
+            // query to get hashID of current tag
+            const data = await db.query(hash_tableQuery, [ tag ]);
+            console.log("hash_idArray inside", data.rows[0].hash_id);
+            // current HashID
+            const currHashId = data.rows[0].hash_id;
+            console.log("currHashId", currHashId);
+            //query for adding to post_hash_join table
+            const post_hash_joinQuery = `INSERT INTO post_hash_join (post_id, hash_id) VALUES ($1, $2) RETURNING *`
+            //params for adding to post_hash_join table query
+            const post_hash_joinQueryParams = [ post_id, currHashId ];
+            // query for adding to post_hash_join table
+            const data2 = await db.query(post_hash_joinQuery, post_hash_joinQueryParams);
+            console.log("data added to post_hash_join", data2.rows);
+
+        });
+        next();
+    } catch(err) {
+        next({
+            log: "error in addToRating_Table middleware",
+            message: "error in addToRating_Table middleware"
         })
     }
   }
