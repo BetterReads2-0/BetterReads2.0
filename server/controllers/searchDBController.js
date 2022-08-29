@@ -67,6 +67,33 @@ module.exports = {
             message: "error in getRatingsInfo middleware"
         })
     }
+  },
+
+  getHashIDs: async (req, res, next) => {
+    try {
+        // get array of reviews from res.locals
+        const { reviews } = res.locals;
+        console.log("reviews in tag", reviews);
+        // loop through reviews array and add book title and author based on book_id
+        for (let element of reviews) {
+            const { post_id } = element;
+            const data = await db.query(`SELECT * FROM "public"."post_hash_join" WHERE post_id = '${post_id}'`)
+            const hashIDs = [];
+            for (let element of data.rows) {
+                console.log("individual hash_id", element);
+                hashIDs.push(element.hash_id)
+            }
+            element.hashIDs = hashIDs;
+            console.log("curr Element", element);
+        }
+        next()
+    } catch(err) {
+        next({
+            log: "error in getHashIDs middleware",
+            message: "error in getHashIDs middleware"
+        })
+    }
   }
+
   
 }
