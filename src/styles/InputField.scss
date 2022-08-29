@@ -1,0 +1,41 @@
+@import'./Colors.scss';
+
+.input-field-label {
+  font-family: 'Garet', sans-serif;
+  font-weight: 300;
+    font-size: 150%;
+    color: $whiteBlue;
+}
+.input-field-input{
+  font-family: 'Garet', sans-serif;
+      font-weight: 300;
+  font-size: 150%;
+  color:$mPink;
+
+}
+
+.input-field-container {
+  padding-bottom: 16px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field-label {
+  margin-bottom: 8px;
+}
+
+.input-field-input {
+  background-color: $whiteBlue;
+  
+  border-color: $grey;
+  border-width: 1px;
+  border-radius: 5px;
+
+  min-width: 225px;
+  max-width: 250px;
+}
+
+.input-field-input:focus {
+  outline: none;
+}
