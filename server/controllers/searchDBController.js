@@ -47,7 +47,7 @@ module.exports = {
     try {
         // get array of reviews from res.locals
         const { reviews } = res.locals;
-        // loop through reviews array and add book title and author based on book_id
+        // loop through reviews array and ratings info
         for (let element of reviews) {
             const { post_id } = element;
             const data = await db.query(`SELECT * FROM "public"."rating_table" WHERE post_id = '${post_id}'`)
@@ -73,8 +73,7 @@ module.exports = {
     try {
         // get array of reviews from res.locals
         const { reviews } = res.locals;
-        console.log("reviews in tag", reviews);
-        // loop through reviews array and add book title and author based on book_id
+        // loop through reviews array and get hashIDs for a certain post
         for (let element of reviews) {
             const { post_id } = element;
             const data = await db.query(`SELECT * FROM "public"."post_hash_join" WHERE post_id = '${post_id}'`)
@@ -91,6 +90,35 @@ module.exports = {
         next({
             log: "error in getHashIDs middleware",
             message: "error in getHashIDs middleware"
+        })
+    }
+  },
+
+  getTagInfo: async (req, res, next) => {
+    try {
+        // get array of reviews from res.locals
+        const { reviews } = res.locals;
+        // loop through reviews array and get tags
+        for (let element of reviews) {
+            const tagsArray = [];
+            const { hashIDs } = element;
+            console.log("hashIDs", hashIDs);
+            for (let tag of hashIDs) {
+                const data = await db.query(`SELECT * FROM "public"."hash_table" WHERE hash_id = ${tag}`)
+                tagsArray.push(data.rows[0].hash);
+            }
+            element.tagsArray = tagsArray;
+        }
+        // adds joined tags to each review
+        for (let element of reviews) {
+            element.tags = element.tagsArray.join();
+        }
+        console.log("udpated reviews", reviews);
+        next()
+    } catch(err) {
+        next({
+            log: "error in getTagInfo middleware",
+            message: "error in getTagInfo middleware"
         })
     }
   }
