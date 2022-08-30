@@ -35,21 +35,20 @@ module.exports = {
       const data = await db.query(accountsQuery, accountsQueryParams);
       const userPass = await data.rows[0].password;
       await bcrypt.compare(password, userPass, (err, response) => {
-          if(err) {
-              return next(err);
-          }
 
           if(response === false){
+            // catches when password is wrong but username exists
               res.locals.isUser = false;
           } else {
             res.locals.username = username;
             res.locals.hash = userPass;
             res.locals.email = email;
-            res.locals.isUser = true;
+            res.locals.isUser = true
           }
           return next();
       });
     } catch(err) {
+      // catches when username doesn't exist
       res.locals.isUser = false;
       next()
     }
