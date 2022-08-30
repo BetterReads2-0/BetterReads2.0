@@ -39,6 +39,7 @@
     "@emotion/styled": "^11.10.0",
     "@reduxjs/toolkit": "^1.8.5",
     "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
     "concurrently": "^7.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
