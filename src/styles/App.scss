@@ -1,0 +1,12 @@
+@import'./Colors.scss';
+
+body {
+  background-color: $grey;
+}
+.app {
+  display: grid;
+  grid-template-columns: 175px 1fr;
+}
+.outlet {
+  margin-left: 15px;
+}

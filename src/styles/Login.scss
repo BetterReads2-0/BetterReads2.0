@@ -1,0 +1,83 @@
+@import'./Colors.scss';
+
+body,html {
+  margin: 0;
+  padding: 0;
+  // background-color: $white;
+}
+.loginPage{
+
+
+  .logoContainer{
+    //position: relative;
+    //background-color: $p-white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    //overflow: auto;
+    //max-height: 1000px;
+    img{
+    margin-top: -15%;
+    // margin-left: -28%;
+    // margin-right: -20%;
+    margin-bottom: -13%;
+  
+    width: 500px;
+    height: 500px;
+   
+  
+    }
+  
+  }
+  .inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -2%;
+    h2{
+      color: $whiteBlue;
+      text-align: center;
+      font-size: 45px;
+      font-family: 'Garet', sans-serif;
+      font-weight: 300;
+                                                
+      margin-bottom: 2%;
+      //margin-bottom: -.00001%;
+    }
+    button{
+      margin-top: 25%;
+      margin-bottom: 35%;
+      color: $whiteBlue;
+      background-color: $lOrange;
+      border-color: $lOrange;
+  
+      border-radius: 10%;
+      // border-color: $p-grey;
+  
+      // font-family:'Staatliches';
+      font-size: 25px;
+    }
+    button:hover{
+      background-color:$mPink;
+      color: $whiteBlue;
+      border-color: $mPink;
+      cursor: pointer;
+    }
+    .needAcc{
+      font-family: 'Garet', sans-serif;
+      font-weight: 300;
+      padding-bottom: 30%;
+      color: $lPink;
+      a{
+        color: $lOrange;
+        font-size: 20px;
+      }
+      a:hover{
+        color: $mPink;
+      }
+    }
+  
+  }
+  
+  }

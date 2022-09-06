@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/client/index.js',
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js'
@@ -37,13 +37,9 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
-      }
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        type: 'asset/resource'
+      },
     ]
   },
   experiments: {
